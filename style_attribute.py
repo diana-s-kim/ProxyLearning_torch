@@ -1,0 +1,5 @@
+STYLES=['early-renaissance','high-renaissance','mannerism-late-renaissance','northern-renaissance','baroque','rococo','romanticism',
+'impressionism','post-impressionism','realism','art-nouveau-modern','cubism','expressionism',
+'fauvism','abstract-expressionism','color-field-painting','minimalism','na-ve-art-primitivism','ukiyo-e','pop-art']
+
+ATTRIBUTES=['non-representational', 'representational', 'repetition', 'rhythm', 'pattern', 'contrast', 'symmetry', 'proportion', 'active', 'straight', 'curved', 'meandering', 'horizontal', 'vertical', 'diagonal', 'energetic', 'gestural', 'geometric', 'abstract', 'amorphous', 'biomorphic', 'decorative', 'planar', 'chromatic', 'closed', 'open', 'smooth', 'rough', 'atmospheric', 'monochromatic', 'warm', 'cool', 'transparent', 'overlapping', 'perspective', 'parallel', 'blurred', 'broken', 'controlled', 'thick', 'thin', 'bumpy', 'flat', 'bright', 'calm', 'muted', 'distorted', 'heavy', 'light', 'linear', 'organic', 'kinetic', 'dark', 'ambiguous', 'balance', 'harmony', 'unity', 'variety']

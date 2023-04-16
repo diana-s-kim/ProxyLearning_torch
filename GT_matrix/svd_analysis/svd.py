@@ -1,0 +1,14 @@
+import pandas as pd
+import numpy as np
+from numpy.linalg import inv
+ATTRIBUTES=['non-representational', 'representational', 'repetition', 'rhythm', 'pattern', 'contrast', 'symmetry', 'proportion', 'active', 'straight', 'curved', 'meandering', 'horizontal', 'vertical', 'diagonal', 'energetic', 'gestural', 'geometric', 'abstract', 'amorphous', 'biomorphic', 'decorative', 'planar', 'chromatic', 'closed', 'open', 'smooth', 'rough', 'atmospheric', 'monochromatic', 'warm', 'cool', 'transparent', 'overlapping', 'perspective', 'parallel', 'blurred', 'broken', 'controlled', 'thick', 'thin', 'bumpy', 'flat', 'bright', 'calm', 'muted', 'distorted', 'heavy', 'light', 'linear', 'organic', 'kinetic', 'dark', 'ambiguous', 'balance', 'harmony', 'unity', 'variety']
+
+scale_factor=20.9
+matrix=pd.read_csv("../G.csv")[ATTRIBUTES].to_numpy().transpose()
+matrix=matrix/scale_factor
+u,s,_= np.linalg.svd(matrix)
+transformed=np.matmul(np.matmul(inv(np.diag(s)),u[:,:20].transpose()),matrix)
+print(np.matmul(transformed.transpose(),transformed))
+print(s)
+
+
