@@ -1,2 +1,0 @@
-##need tensor weights##
-tensorflow_vgg16.pt

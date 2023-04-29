@@ -20,7 +20,7 @@ class ClassificationPresetTrain:
         random_erase_prob=0.0,
     ):  
 #        transforms.Resize(size=500,interpolation=interpolation)
-        trans = [transforms.Resize(size=500,interpolation=interpolation),transforms.RandomResizedCrop(crop_size, interpolation=interpolation)]
+        trans = [transforms.RandomResizedCrop(crop_size, interpolation=interpolation)]
         if hflip_prob > 0:
             trans.append(transforms.RandomHorizontalFlip(hflip_prob))
         if auto_augment_policy is not None:

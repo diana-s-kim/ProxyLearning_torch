@@ -3,19 +3,14 @@ import pandas as pd
 from torch.utils.data import Dataset
 from torchvision.io import read_image #compare
 from PIL import Image
-
-STYLES=['early-renaissance','high-renaissance','mannerism-late-renaissance','northern-renaissance','baroque','rococo','romanticism','impressionism','post-impressionism','realism','art-nouveau-modern','cubism','expressionism','fauvism','abstract-expressionism','color-field-painting','minimalism','na-ve-art-primitivism','ukiyo-e','pop-art']
+import style_attribute
 
 class WikiArt(Dataset):
-    def __init__(self,annotations_file,img_dir,transform=None, target_transform=None,split='train'):
-        print("here")
-        self.img_labels = pd.read_csv(annotations_file,header=None)
-        self.img_labels = self.img_labels[self.img_labels.iloc[:,-1]==split]#train or test
-        self.img_labels.iloc[:,1]=self.img_labels.iloc[:,1].apply(lambda x: STYLES.index(x))
-#        print(pd.unique(self.img_labels.iloc[:,1]))
+    def __init__(self,data_csv,img_dir,transform=None, target_transform=None):
+        self.img_labels = pd.read_csv(data_csv,header=0)
+        self.img_labels.iloc[:,1]=self.img_labels.iloc[:,1].apply(lambda x: style_attribute.STYLE_MERGE[x])
+        self.img_labels.iloc[:,1]=self.img_labels.iloc[:,1].apply(lambda x: style_attribute.STYLES.index(x))
         self.img_dir = img_dir
-#        print(self.img_dir)
-        
         self.transform = transform
         self.target_transform = target_transform
 

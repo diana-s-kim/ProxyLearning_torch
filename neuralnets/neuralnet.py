@@ -9,14 +9,15 @@ import numpy as np
 from numpy.linalg import inv
 #back bone net
 class BaseNet(nn.Module):
-    def __init__(self,name='vgg16',drop=1):
+    def __init__(self,name=None,drop=None):
         super().__init__()
         backbones={'vgg16_bn':models.vgg16_bn,
-                   'vgg16':models.vgg16}
+                   'vgg16':models.vgg16,
+                   'resnet50':models.resnet50,
+                   'resnet101':models.resnet101}
         self.name=name
-#        self.backbone=backbones[self.name](weights="IMAGENET1K_V1")
         self.backbone=backbones[self.name]()
-        self.backbone.load_state_dict(torch.load("./tensorflow_torch/tensorflow_vgg16.pt"),strict=True)#tensorflow model migrating
+        self.backbone.load_state_dict(torch.load("./tensorflow_torch/tensorflow_"+name+".pt"),strict=True)#tensorflow model migrating
         self.basenet=nn.Sequential(*list(self.backbone.children())[:-drop])
         print(list(self.basenet.children()))
     def forward(self,x):
@@ -26,7 +27,7 @@ class BaseNet(nn.Module):
 
 #fc layer
 class MLP(nn.Module):
-    def __init__(self,layers,dropout,activations):
+    def __init__(self,layers=None,dropout=None,activations=None):
         super().__init__()
         fc=[nn.Flatten()]
         for layer,drop,relu in zip(layers,dropout,activations):
@@ -45,27 +46,16 @@ class MLP(nn.Module):
 
     
 class SVD_G(nn.Module):
-    def __init__(self,g_path="/ibex/scratch/kimds/Research/P1/ProxyLearning/ProxyLearning/GT_matrix/G.csv",scale_factor=1.0):
+    def __init__(self,g_path="./GT_matrix/G.csv",scale_factor=1.0):
         super().__init__()
         self.test=nn.Linear(58,20)
         self.pre_computedG=pd.read_csv(g_path)[style_attribute.ATTRIBUTES].to_numpy().transpose().astype(float)/scale_factor
-#        print(self.pre_computedG)
         self.u,self.s,_= np.linalg.svd(self.pre_computedG)
-#        print(self.u,self.s)
         self.svd=np.matmul(inv(np.diag(self.s)),self.u[:,:self.s.shape[0]].transpose())
-#        self.svd_1=np.matmul(self.u[:,:self.s.shape[0]],inv(np.diag(self.s)))
-#        self.svd_2=np.matmul(inv(np.diag(self.s)),self.u[:,:self.s.shape[0]]).transpose())
-#        self.svd_adjustment=np.matmul(self.u[:,:self.s.shape[0]],np.matmul(inv(np.matmul(np.diag(self.s),np.diag(self.s))),self.u[:,:self.s.shape[0]].transpose()))
-#        print(self.s.shape[0])
         self.transformedG=np.matmul(self.svd,self.pre_computedG).transpose()
-#        print(np.matmul(self.transformedG.transpose(),self.transformedG))
         self.svd_visual_elements=nn.Parameter(torch.from_numpy(self.svd).to("cuda:0"),requires_grad=False).type(torch.float)
         self.svd_G=nn.Parameter(torch.from_numpy(self.transformedG).to("cuda:0"),requires_grad=False).type(torch.float)
-        #self.Gmatrix=nn.Parameter(torch.from_numpy(self.pre_computedG).to("cuda:0"),requires_grad=False).type(torch.float)
-
     def forward(self,x):
-        #x=torch.mm(x,self.svd_visual_elements)
-        #x=torch.mm(x,self.Gmatrix)
         x=nn.functional.linear(x,self.svd_visual_elements)
         x=nn.functional.linear(x,self.svd_G)
         return x
