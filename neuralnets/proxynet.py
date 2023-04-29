@@ -1,3 +1,10 @@
+"""
+Proxy Learning pyTorch version--Proxy Learning of Visual Concepts of Fine Art Paintings from Styles through Language Models, Vol. 36 No. 4: AAAI-22
+The MIT License (MIT)                                                                                                    
+Originally created in 2023, for Python 3.x                                                                                    
+Copyright (c) 2023 Diana S. Kim (diana.se.kim@gmail.com)
+"""
+
 import torch
 from torch import nn
 from . import neuralnet
