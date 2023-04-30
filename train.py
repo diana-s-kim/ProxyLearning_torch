@@ -123,7 +123,7 @@ def main(args):
     
     print("start training....")
     for epoch in range(args.start_epoch, args.epochs):
-        train_one_epoch(val_dataloader, model, criterion, optimizer, device)
+        train_one_epoch(train_dataloader, model, criterion, optimizer, device)
         scheduler.step()
         if epoch%20==0:
 #            torch.save(model.state_dict(),args.save_model_dir+"proxy_"+str(epoch)+".pt")
