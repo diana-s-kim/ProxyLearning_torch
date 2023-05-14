@@ -119,6 +119,8 @@ def main(args):
         checkpoint=torch.load(args.resume,map_location=device)
         optimizer.load_state_dict(checkpoint["optimizer"])
         scheduler.load_state_dict(checkpoint["lr_scheduler"])
+        model.load_state_dict(checkpoint["model_state_dict"],strict=True)
+        print("...load model...",args.resume)
         args.start_epoch = checkpoint["epoch"] + 1
     
     print("start training....")
